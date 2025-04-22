@@ -39,13 +39,10 @@ export default function HadithBooks({ navigation }) {
           paddingVertical: 20,
           margin: 8,
           backgroundColor: "#fff",
-          borderRadius: 12,
-          shadowColor: "#000",
-          shadowOpacity: 0.1,
-          shadowRadius: 6,
-          elevation: 3,
+          borderRadius: 10,
         }}
       >
+        {/* First Word of the Book */}
         <View
           style={{
             width: 40,
@@ -54,17 +51,24 @@ export default function HadithBooks({ navigation }) {
             backgroundColor: bgColor,
             justifyContent: "center",
             alignItems: "center",
-            marginRight: 12,
           }}
         >
-          <Text style={{ fontSize: 18, fontWeight: "bold", color: "#fff" }}>
+          <Text style={{ fontSize: 25, fontWeight: "medium", color: "#fff" }}>
             {initial}
           </Text>
         </View>
-        <Text style={{ fontSize: 16, fontWeight: "600", marginTop: 8 }}>
+
+        {/* Book name & Hadith Count */}
+        <Text
+          style={{
+            fontSize: heightPercentageToDP(2.2),
+            fontWeight: "600",
+            marginTop: 8,
+          }}
+        >
           {item.name}
         </Text>
-        <Text style={{ color: bgColor, marginTop: 4 }}>
+        <Text style={{ color: bgColor, marginTop: 4, fontWeight: "bold" }}>
           {item.data.hadiths.length} hadiths
         </Text>
       </AnimatedTouchable>
@@ -103,7 +107,7 @@ export default function HadithBooks({ navigation }) {
             marginRight: 12,
           }}
         >
-          <Text style={{ fontSize: 18, fontWeight: "bold", color: "#fff" }}>
+          <Text style={{ fontSize: 25, fontWeight: "medium", color: "#fff" }}>
             {initial}
           </Text>
         </View>
@@ -130,8 +134,8 @@ export default function HadithBooks({ navigation }) {
     <View
       style={{
         marginTop: heightPercentageToDP(11),
-        paddingTop: 20,
-        paddingBottom: 60,
+        paddingTop: 10,
+        paddingBottom: 50,
         paddingHorizontal: 10,
         backgroundColor: numColumns === 2 ? "#F5F5F8" : "#fff",
         borderRadius: 20,
@@ -151,7 +155,7 @@ export default function HadithBooks({ navigation }) {
             <FontAwesome5
               name="list"
               size={20}
-              color={numColumns === 1 ? "green" : "gray"}
+              color={numColumns === 1 ? "#00AB9A" : "gray"}
             />
           </Text>
         </TouchableOpacity>
@@ -160,7 +164,7 @@ export default function HadithBooks({ navigation }) {
             <Ionicons
               name="grid-outline"
               size={24}
-              color={numColumns === 2 ? "green" : "gray"}
+              color={numColumns === 2 ? "#00AB9A" : "gray"}
             />
           </Text>
         </TouchableOpacity>
