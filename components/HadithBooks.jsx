@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { View, Text, FlatList, TouchableOpacity } from "react-native";
 import { books } from "../data/books.js";
 import { heightPercentageToDP } from "react-native-responsive-screen";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
+import Animated, { FadeInDown } from "react-native-reanimated";
 
 const colors = [
   "#FF6B6B",
@@ -14,6 +17,10 @@ const colors = [
   "#6A4C93",
 ];
 
+const AnimatedTouchable = Animated.createAnimatedComponent(
+  require("react-native").TouchableOpacity
+);
+
 export default function HadithBooks({ navigation }) {
   const [numColumns, setNumColumns] = useState(1);
 
@@ -21,7 +28,10 @@ export default function HadithBooks({ navigation }) {
     const initial = item.id.charAt(0).toUpperCase();
     const bgColor = colors[index % colors.length];
     return (
-      <TouchableOpacity
+      <AnimatedTouchable
+        entering={FadeInDown.delay(index * 100)
+          .duration(300)
+          .springify()}
         onPress={() => navigation.navigate("BookDetail", { bookId: item.id })}
         style={{
           flex: 1,
@@ -57,7 +67,7 @@ export default function HadithBooks({ navigation }) {
         <Text style={{ color: bgColor, marginTop: 4 }}>
           {item.data.hadiths.length} hadiths
         </Text>
-      </TouchableOpacity>
+      </AnimatedTouchable>
     );
   };
 
@@ -66,7 +76,10 @@ export default function HadithBooks({ navigation }) {
     const bgColor = colors[index % colors.length];
     const author = item.data.metadata.english.author || "Unknown Author";
     return (
-      <TouchableOpacity
+      <AnimatedTouchable
+        entering={FadeInDown.delay(index * 100)
+          .duration(300)
+          .springify()}
         onPress={() => navigation.navigate("BookDetail", { bookId: item.id })}
         style={{
           flex: 1,
@@ -109,7 +122,7 @@ export default function HadithBooks({ navigation }) {
           </Text>
           <Text style={{ color: "#666", marginTop: 4 }}>From: {author}</Text>
         </View>
-      </TouchableOpacity>
+      </AnimatedTouchable>
     );
   };
 
@@ -120,7 +133,7 @@ export default function HadithBooks({ navigation }) {
         paddingTop: 20,
         paddingBottom: 60,
         paddingHorizontal: 10,
-        backgroundColor: "#F5F5F8",
+        backgroundColor: numColumns === 2 ? "#F5F5F8" : "#fff",
         borderRadius: 20,
       }}
     >
@@ -128,32 +141,27 @@ export default function HadithBooks({ navigation }) {
         style={{
           flexDirection: "row",
           justifyContent: "flex-end",
-          marginBottom: 8,
+          gap: 15,
+          alignItems: "center",
+          paddingHorizontal: 10,
         }}
       >
-        <TouchableOpacity
-          onPress={() => setNumColumns(1)}
-          style={{
-            padding: 8,
-            backgroundColor: numColumns === 1 ? "#ccc" : "#fff",
-            borderRadius: 4,
-            marginRight: 8,
-          }}
-        >
+        <TouchableOpacity onPress={() => setNumColumns(1)}>
           <Text style={{ fontWeight: numColumns === 1 ? "bold" : "normal" }}>
-            📃
+            <FontAwesome5
+              name="list"
+              size={20}
+              color={numColumns === 1 ? "green" : "gray"}
+            />
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => setNumColumns(2)}
-          style={{
-            padding: 8,
-            backgroundColor: numColumns === 2 ? "#ccc" : "#fff",
-            borderRadius: 4,
-          }}
-        >
+        <TouchableOpacity onPress={() => setNumColumns(2)}>
           <Text style={{ fontWeight: numColumns === 2 ? "bold" : "normal" }}>
-            🔲
+            <Ionicons
+              name="grid-outline"
+              size={24}
+              color={numColumns === 2 ? "green" : "gray"}
+            />
           </Text>
         </TouchableOpacity>
       </View>
