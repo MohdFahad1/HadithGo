@@ -15,7 +15,7 @@ export const books = [
     data: require("../assets/hadiths/tirmidhi.json"),
   },
   {
-    id: "nasaai",
+    id: "nasai",
     name: "Sunan an-Nasa'i",
     data: require("../assets/hadiths/nasai.json"),
   },
