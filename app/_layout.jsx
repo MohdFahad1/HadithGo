@@ -10,7 +10,7 @@ const Layout = () => {
       }}
     >
       <Stack.Screen name="(splash)/index" />
-      <Stack.Screen name="(tabs)" />
+      <Stack.Screen name="(main)" />
     </Stack>
   );
 };

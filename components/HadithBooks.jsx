@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { View, Text, FlatList, TouchableOpacity } from "react-native";
 import { books } from "../data/books.js";
-import { heightPercentageToDP } from "react-native-responsive-screen";
+import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import Animated, { FadeInDown } from "react-native-reanimated";
+import { useRouter } from "expo-router";
 
 const colors = [
   "#FF6B6B",
@@ -21,8 +22,9 @@ const AnimatedTouchable = Animated.createAnimatedComponent(
   require("react-native").TouchableOpacity
 );
 
-export default function HadithBooks({ navigation }) {
+export default function HadithBooks() {
   const [numColumns, setNumColumns] = useState(1);
+  const router = useRouter();
 
   const renderGridItem = ({ item, index }) => {
     const initial = item.id.charAt(0).toUpperCase();
@@ -32,7 +34,9 @@ export default function HadithBooks({ navigation }) {
         entering={FadeInDown.delay(index * 100)
           .duration(300)
           .springify()}
-        onPress={() => navigation.navigate("BookDetail", { bookId: item.id })}
+        onPress={() =>
+          router.navigate(`BookDetail/${item.id}`, { bookId: item.id })
+        }
         style={{
           flex: 1,
           alignItems: "center",
@@ -61,7 +65,7 @@ export default function HadithBooks({ navigation }) {
         {/* Book name & Hadith Count */}
         <Text
           style={{
-            fontSize: heightPercentageToDP(2.2),
+            fontSize: hp(2.2),
             fontWeight: "600",
             marginTop: 8,
           }}
@@ -84,7 +88,9 @@ export default function HadithBooks({ navigation }) {
         entering={FadeInDown.delay(index * 100)
           .duration(300)
           .springify()}
-        onPress={() => navigation.navigate("BookDetail", { bookId: item.id })}
+        onPress={() =>
+          router.navigate(`BookDetail/${item.id}`, { bookId: item.id })
+        }
         style={{
           flex: 1,
           flexDirection: "row",
@@ -133,7 +139,7 @@ export default function HadithBooks({ navigation }) {
   return (
     <View
       style={{
-        marginTop: heightPercentageToDP(11),
+        marginTop: hp(7),
         paddingTop: 10,
         paddingBottom: 50,
         paddingHorizontal: 10,
@@ -178,6 +184,7 @@ export default function HadithBooks({ navigation }) {
           numColumns={2}
           showsVerticalScrollIndicator={false}
           renderItem={renderGridItem}
+          router={router}
         />
       ) : (
         <FlatList
@@ -187,6 +194,7 @@ export default function HadithBooks({ navigation }) {
           numColumns={1}
           showsVerticalScrollIndicator={false}
           renderItem={renderListItem}
+          router={router}
         />
       )}
     </View>
