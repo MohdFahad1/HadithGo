@@ -9,8 +9,13 @@ const Layout = () => {
         headerShown: false,
       }}
     >
+      {/* splash screen */}
       <Stack.Screen name="(splash)/index" />
-      <Stack.Screen name="(main)" />
+
+      {/* main flow */}
+      <Stack.Screen name="(main)/index" />
+      <Stack.Screen name="(main)/BookDetail/[bookId]/index" />
+      <Stack.Screen name="(main)/BookDetail/[bookId]/[chapterId]" />
     </Stack>
   );
 };
