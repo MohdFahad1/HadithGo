@@ -1,5 +1,12 @@
 import React from "react";
-import { View, Text, FlatList, StyleSheet, Pressable } from "react-native";
+import {
+  View,
+  Text,
+  FlatList,
+  StyleSheet,
+  Pressable,
+  Alert,
+} from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import { books } from "../../../../data/books";
 import ScreenWrapper from "../../../../components/ScreenWrapper";
@@ -7,6 +14,7 @@ import Header from "../../../../components/Header";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import * as Clipboard from "expo-clipboard";
 
 export default function ChapterDetail() {
   const { bookId, chapterId } = useLocalSearchParams();
@@ -24,6 +32,14 @@ export default function ChapterDetail() {
   const hadithsForThisChapter = b.data.hadiths.filter(
     (h) => h.chapterId === Number(chapterId)
   );
+
+  const copyToClipboard = async (text) => {
+    await Clipboard.setStringAsync(text);
+    Alert.alert(
+      "Copied to Clipboard",
+      "The hadith text has been copied to you clipboard."
+    );
+  };
 
   return (
     <ScreenWrapper>
@@ -47,7 +63,7 @@ export default function ChapterDetail() {
                 <Text style={styles.hadithEng}>{item.english.text}</Text>
               </View>
               <View className="flex-row items-center justify-end gap-2">
-                <Pressable>
+                <Pressable onPress={() => copyToClipboard(item.english.text)}>
                   <MaterialIcons
                     name="content-copy"
                     size={22}
