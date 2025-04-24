@@ -1,12 +1,5 @@
 import React from "react";
-import {
-  View,
-  Text,
-  FlatList,
-  StyleSheet,
-  Pressable,
-  Alert,
-} from "react-native";
+import { View, Text, FlatList, Pressable, Alert } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import { books } from "../../../../data/books";
 import ScreenWrapper from "../../../../components/ScreenWrapper";
@@ -72,8 +65,8 @@ export default function ChapterDetail() {
       />
 
       <View
-        style={styles.listContainer}
-        className="px-5 bg-[#fff] rounded-t-3xl"
+        className="px-5 bg-[#fff] rounded-t-3xl flex-1"
+        style={{ marginTop: hp(8) }}
       >
         <FlatList
           data={hadithsForThisChapter}
@@ -82,7 +75,9 @@ export default function ChapterDetail() {
           renderItem={({ item }) => (
             <View className="p-3 border-[1px] rounded-xl border-[#ccc] mt-5">
               <View style={{ flex: 1 }}>
-                <Text style={styles.hadithEng}>{item.english.text}</Text>
+                <Text className="mb-3" style={{ fontSize: hp(2.2) }}>
+                  {item.english.text}
+                </Text>
               </View>
               <View className="flex-row items-center justify-end gap-2">
                 <Pressable onPress={() => copyToClipboard(item.english.text)}>
@@ -102,28 +97,8 @@ export default function ChapterDetail() {
               </View>
             </View>
           )}
-          ItemSeparatorComponent={() => <View style={styles.separator} />}
         />
       </View>
     </ScreenWrapper>
   );
 }
-
-const styles = StyleSheet.create({
-  listContainer: {
-    flex: 1,
-    marginTop: hp(8),
-    backgroundColor: "#fff",
-  },
-  row: {
-    flexDirection: "row",
-    paddingVertical: 12,
-    paddingHorizontal: 8,
-  },
-  hadithEng: { fontSize: 16, marginBottom: 4 },
-  separator: {
-    height: 1,
-    backgroundColor: "#eee",
-    marginHorizontal: 8,
-  },
-});

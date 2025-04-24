@@ -23,7 +23,7 @@ const SplashScreen = () => {
       </Animated.View>
       <View className="absolute bottom-44 left-0 right-0 flex items-center justify-center bg-[#003B33] h-[100px]">
         <Text className="text-2xl font-bold text-white w-[200px] text-center">
-          Carry the Sunnah, wherever you go.
+          Carry the Sunnah, wherever you go. Your go to app for daily Hadith.
         </Text>
       </View>
     </View>

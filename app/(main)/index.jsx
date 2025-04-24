@@ -10,10 +10,7 @@ const Home = () => {
     <>
       <StatusBar style="light" />
       <ScreenWrapper>
-        <Header
-          heading={"Hadith Go"}
-          // subHeading={"Your go to app for daily Hadith"}
-        />
+        <Header heading={"Hadith Go"} />
         <View>
           <HadithBooks />
         </View>
