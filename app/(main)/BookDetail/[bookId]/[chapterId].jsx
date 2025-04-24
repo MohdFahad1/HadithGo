@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, FlatList, Pressable, Alert } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import { books } from "../../../../data/books";
@@ -9,9 +9,11 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import * as Clipboard from "expo-clipboard";
 import { Share } from "react-native";
+import AntDesign from "@expo/vector-icons/AntDesign";
 
 export default function ChapterDetail() {
   const { bookId, chapterId } = useLocalSearchParams();
+  const [copiedHadith, setCopiedHadith] = useState(null);
   const b = books.find((b) => b.id === bookId);
 
   if (!b) {
@@ -27,12 +29,16 @@ export default function ChapterDetail() {
     (h) => h.chapterId === Number(chapterId)
   );
 
-  const copyToClipboard = async (text) => {
+  const copyToClipboard = async (text, id) => {
+    setCopiedHadith(id);
     await Clipboard.setStringAsync(text);
     Alert.alert(
       "Copied to Clipboard",
       "The hadith text has been copied to you clipboard."
     );
+    setTimeout(() => {
+      setCopiedHadith(null);
+    }, 1200);
   };
 
   const shareHadith = async (text) => {
@@ -80,13 +86,20 @@ export default function ChapterDetail() {
                 </Text>
               </View>
               <View className="flex-row items-center justify-end gap-2">
-                <Pressable onPress={() => copyToClipboard(item.english.text)}>
-                  <MaterialIcons
-                    name="content-copy"
-                    size={22}
-                    color="#00AB9A"
-                  />
-                </Pressable>
+                {copiedHadith === item.id ? (
+                  <AntDesign name="check" size={24} color="#00AB9A" />
+                ) : (
+                  <Pressable
+                    onPress={() => copyToClipboard(item.english.text, item.id)}
+                  >
+                    <MaterialIcons
+                      name="content-copy"
+                      size={22}
+                      color="#00AB9A"
+                    />
+                  </Pressable>
+                )}
+
                 <Pressable onPress={() => shareHadith(item.english.text)}>
                   <MaterialCommunityIcons
                     name="share-outline"
