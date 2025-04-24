@@ -5,7 +5,7 @@ import { FontAwesome6, MaterialIcons } from "@expo/vector-icons";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useRouter } from "expo-router";
 
-const Header = ({ heading, backButton = false }) => {
+const Header = ({ heading, subHeading, backButton = false }) => {
   const router = useRouter();
 
   return (
@@ -32,9 +32,12 @@ const Header = ({ heading, backButton = false }) => {
             <Ionicons name="arrow-back" size={24} color="white" />
           </Pressable>
         )}
-        <Text className="font-bold text-white" style={{ fontSize: hp(3) }}>
-          {heading}
-        </Text>
+        <View>
+          <Text className="font-bold text-white" style={{ fontSize: hp(3) }}>
+            {heading}
+          </Text>
+          {subHeading && <Text className="text-white">{subHeading}</Text>}
+        </View>
       </View>
       <Pressable>
         <MaterialIcons name="favorite-border" size={28} color="white" />

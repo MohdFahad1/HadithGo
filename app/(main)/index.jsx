@@ -12,7 +12,7 @@ const Home = () => {
       <ScreenWrapper>
         <Header
           heading={"Hadith Go"}
-          subHeading={"Your go to app for daily Hadith"}
+          // subHeading={"Your go to app for daily Hadith"}
         />
         <View>
           <HadithBooks />
