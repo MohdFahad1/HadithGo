@@ -15,6 +15,7 @@ import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import * as Clipboard from "expo-clipboard";
+import { Share } from "react-native";
 
 export default function ChapterDetail() {
   const { bookId, chapterId } = useLocalSearchParams();
@@ -39,6 +40,27 @@ export default function ChapterDetail() {
       "Copied to Clipboard",
       "The hadith text has been copied to you clipboard."
     );
+  };
+
+  const shareHadith = async (text) => {
+    try {
+      const result = await Share.share({
+        message: text,
+        title: "Share Hadith from HadithGo App",
+      });
+
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          console.log("Shared with activity type: ", result.activityType);
+        } else {
+          console.log("Shared successfully");
+        }
+      } else if (result.action === Share.dismissedAction) {
+        console.log("Share dismissed");
+      }
+    } catch (error) {
+      Alert.alert("Error", "Failed to share the hadith.");
+    }
   };
 
   return (
@@ -70,11 +92,13 @@ export default function ChapterDetail() {
                     color="#00AB9A"
                   />
                 </Pressable>
-                <MaterialCommunityIcons
-                  name="share-outline"
-                  size={24}
-                  color="#00AB9A"
-                />
+                <Pressable onPress={() => shareHadith(item.english.text)}>
+                  <MaterialCommunityIcons
+                    name="share-outline"
+                    size={24}
+                    color="#00AB9A"
+                  />
+                </Pressable>
               </View>
             </View>
           )}
