@@ -11,6 +11,7 @@ import * as Clipboard from "expo-clipboard";
 import { Share } from "react-native";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { ThemeContext } from "../../../../context/ThemeContext";
+import { LanguageContext } from "../../../../context/LanguageContext";
 
 export default function ChapterDetail() {
   const { bookId, chapterId } = useLocalSearchParams();
@@ -18,17 +19,23 @@ export default function ChapterDetail() {
   const b = books.find((b) => b.id === bookId);
 
   const { theme } = useContext(ThemeContext);
+  const { language } = useContext(LanguageContext);
 
   if (!b) {
     return <Text>Book not found</Text>;
   }
 
-  const chap = b.data.chapters.find((c) => c.id.toString() === chapterId);
-  if (!chap) {
+  const { metadata, chapters, hadiths } = b.data;
+  const bookTitle = metadata[language].title;
+  const chapterName = chapters.find((c) => c.id.toString() === chapterId)?.[
+    language
+  ];
+
+  if (!chapterName) {
     return <Text>Chapter not found</Text>;
   }
 
-  const hadithsForThisChapter = b.data.hadiths.filter(
+  const hadithsForThisChapter = hadiths.filter(
     (h) => h.chapterId === Number(chapterId)
   );
 
@@ -67,11 +74,7 @@ export default function ChapterDetail() {
 
   return (
     <ScreenWrapper>
-      <Header
-        heading={b.data.metadata.english.title}
-        subHeading={chap.english}
-        backButton
-      />
+      <Header heading={bookTitle} subHeading={chapterName} backButton />
 
       <View
         className="flex-1 px-5 rounded-t-3xl"
@@ -84,47 +87,49 @@ export default function ChapterDetail() {
           data={hadithsForThisChapter}
           keyExtractor={(h, i) => (h.id ?? i).toString()}
           showsVerticalScrollIndicator={false}
-          renderItem={({ item }) => (
-            <View
-              className="p-3 border-[1px] rounded-xl mt-5"
-              style={{ borderColor: theme === "dark" ? "#444" : "#ccc" }}
-            >
-              <View style={{ flex: 1 }}>
-                <Text
-                  className="mb-3"
-                  style={{
-                    fontSize: hp(2.2),
-                    color: theme === "dark" ? "#e3e3e3" : "#666",
-                  }}
-                >
-                  {item.english.text}
-                </Text>
-              </View>
-              <View className="flex-row items-center justify-end gap-2">
-                {copiedHadith === item.id ? (
-                  <AntDesign name="check" size={24} color="#00AB9A" />
-                ) : (
-                  <Pressable
-                    onPress={() => copyToClipboard(item.english.text, item.id)}
+          renderItem={({ item }) => {
+            const text =
+              language === "english" ? item.english.text : item.arabic;
+            return (
+              <View
+                className="p-3 border-[1px] rounded-xl mt-5"
+                style={{ borderColor: theme === "dark" ? "#444" : "#ccc" }}
+              >
+                <View style={{ flex: 1 }}>
+                  <Text
+                    className="mb-3"
+                    style={{
+                      fontSize: hp(2.2),
+                      color: theme === "dark" ? "#e3e3e3" : "#666",
+                    }}
                   >
-                    <MaterialIcons
-                      name="content-copy"
-                      size={22}
+                    {text}
+                  </Text>
+                </View>
+                <View className="flex-row items-center justify-end gap-2">
+                  {copiedHadith === item.id ? (
+                    <AntDesign name="check" size={24} color="#00AB9A" />
+                  ) : (
+                    <Pressable onPress={() => copyToClipboard(text, item.id)}>
+                      <MaterialIcons
+                        name="content-copy"
+                        size={22}
+                        color="#00AB9A"
+                      />
+                    </Pressable>
+                  )}
+
+                  <Pressable onPress={() => shareHadith(text)}>
+                    <MaterialCommunityIcons
+                      name="share-outline"
+                      size={24}
                       color="#00AB9A"
                     />
                   </Pressable>
-                )}
-
-                <Pressable onPress={() => shareHadith(item.english.text)}>
-                  <MaterialCommunityIcons
-                    name="share-outline"
-                    size={24}
-                    color="#00AB9A"
-                  />
-                </Pressable>
+                </View>
               </View>
-            </View>
-          )}
+            );
+          }}
         />
       </View>
     </ScreenWrapper>

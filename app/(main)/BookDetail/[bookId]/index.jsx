@@ -6,12 +6,14 @@ import ScreenWrapper from "../../../../components/ScreenWrapper";
 import Header from "../../../../components/Header";
 import { heightPercentageToDP } from "react-native-responsive-screen";
 import { ThemeContext } from "../../../../context/ThemeContext";
+import { LanguageContext } from "../../../../context/LanguageContext";
 
 const BookDetail = () => {
   const { bookId } = useLocalSearchParams();
   const router = useRouter();
 
   const { theme } = useContext(ThemeContext);
+  const { language } = useContext(LanguageContext);
 
   const book = books.find((b) => b.id === bookId);
 
@@ -23,11 +25,13 @@ const BookDetail = () => {
     );
   }
 
-  const { chapters } = book.data;
+  const { chapters, metadata } = book.data;
+
+  const localizedTitle = metadata[language].title;
 
   return (
     <ScreenWrapper>
-      <Header heading={book.data.metadata.english.title} backButton={true} />
+      <Header heading={localizedTitle} backButton={true} />
       <View
         style={{
           marginTop: heightPercentageToDP(8),
@@ -44,43 +48,46 @@ const BookDetail = () => {
           keyExtractor={(item, index) =>
             (item.id != null ? item.id : index).toString()
           }
-          renderItem={({ item }) => (
-            <Pressable
-              className="flex-row items-center gap-4 p-3"
-              onPress={() => {
-                router.push({
-                  pathname: "/(main)/BookDetail/[bookId]/[chapterId]",
-                  params: {
-                    bookId: bookId,
-                    chapterId: item.id,
-                  },
-                });
-              }}
-            >
-              <View
-                className={`
+          renderItem={({ item }) => {
+            const label = item[language];
+            return (
+              <Pressable
+                className="flex-row items-center gap-4 p-3"
+                onPress={() => {
+                  router.push({
+                    pathname: "/(main)/BookDetail/[bookId]/[chapterId]",
+                    params: {
+                      bookId: bookId,
+                      chapterId: item.id,
+                    },
+                  });
+                }}
+              >
+                <View
+                  className={`
         items-center justify-center rounded-lg size-10
         ${theme === "dark" ? "bg-[#00AB9A]/40" : "bg-[#00AB9A]"}
       `}
-              >
-                <Text
-                  style={{
-                    alignItems: "center",
-                    justifyContent: "center",
-                    color: theme === "dark" ? "#F2EFEB" : "white",
-                  }}
                 >
-                  {item.id}
+                  <Text
+                    style={{
+                      alignItems: "center",
+                      justifyContent: "center",
+                      color: theme === "dark" ? "#F2EFEB" : "white",
+                    }}
+                  >
+                    {item.id}
+                  </Text>
+                </View>
+                <Text
+                  className="flex-1 text-[16px]"
+                  style={{ color: theme === "dark" ? "#F2EFEB" : "#000" }}
+                >
+                  {label}
                 </Text>
-              </View>
-              <Text
-                className="flex-1 text-[16px]"
-                style={{ color: theme === "dark" ? "#F2EFEB" : "#000" }}
-              >
-                {item.english}
-              </Text>
-            </Pressable>
-          )}
+              </Pressable>
+            );
+          }}
           ItemSeparatorComponent={() => <View className="h-[1px] bg-[#eee]" />}
         />
       </View>

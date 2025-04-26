@@ -7,6 +7,7 @@ import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import { useRouter } from "expo-router";
 import { ThemeContext } from "../context/ThemeContext.js";
+import { LanguageContext } from "../context/LanguageContext.js";
 
 const colors = [
   "#FF6B6B",
@@ -28,10 +29,14 @@ export default function HadithBooks() {
   const router = useRouter();
 
   const { theme } = useContext(ThemeContext);
+  const { language } = useContext(LanguageContext);
 
   const renderGridItem = ({ item, index }) => {
     const initial = item.id.charAt(0).toUpperCase();
     const bgColor = colors[index % colors.length];
+    const title = item.data.metadata[language].title;
+    const count = item.data.hadiths.length;
+
     return (
       <AnimatedTouchable
         entering={FadeInDown.delay(index * 100)
@@ -77,10 +82,10 @@ export default function HadithBooks() {
             color: theme === "dark" ? "#e3e3e3" : "#121212",
           }}
         >
-          {item.name}
+          {title}
         </Text>
         <Text style={{ color: bgColor, marginTop: 4, fontWeight: "bold" }}>
-          {item.data.hadiths.length} hadiths
+          ( {count} ) {language === "arabic" ? "أحاديث" : "hadiths"}
         </Text>
       </AnimatedTouchable>
     );
@@ -89,7 +94,10 @@ export default function HadithBooks() {
   const renderListItem = ({ item, index }) => {
     const initial = item.id.charAt(0).toUpperCase();
     const bgColor = colors[index % colors.length];
-    const author = item.data.metadata.english.author || "Unknown Author";
+    const title = item.data.metadata[language].title;
+    const author = item.data.metadata[language].author || "Unknown Author";
+    const count = item.data.hadiths.length;
+
     return (
       <AnimatedTouchable
         entering={FadeInDown.delay(index * 100)
@@ -132,7 +140,7 @@ export default function HadithBooks() {
               color: theme === "dark" ? "#E3E3E3" : "#000",
             }}
           >
-            {item.name}{" "}
+            {title}{" "}
             <Text
               style={{
                 color: theme === "dark" ? "#F7F5F2" : "#121212",
@@ -140,7 +148,7 @@ export default function HadithBooks() {
                 fontWeight: "400",
               }}
             >
-              ({item.data.hadiths.length} hadiths)
+              ( {count} ) {language === "arabic" ? "أحاديث" : "hadiths"}
             </Text>
           </Text>
           <Text
@@ -149,7 +157,7 @@ export default function HadithBooks() {
               marginTop: 4,
             }}
           >
-            From: {author}
+            {language === "arabic" ? "من:" : "From:"} {author}
           </Text>
         </View>
       </AnimatedTouchable>
