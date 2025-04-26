@@ -11,7 +11,9 @@ import {
 } from "react-native";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import AntDesign from "@expo/vector-icons/AntDesign";
 import { ThemeContext } from "../context/ThemeContext";
+import { LanguageContext } from "../context/LanguageContext";
 
 const { width: screenWidth } = Dimensions.get("window");
 const DRAWER_WIDTH = screenWidth * 0.7;
@@ -19,8 +21,10 @@ const DRAWER_WIDTH = screenWidth * 0.7;
 const Drawer = ({ visible, onClose, items }) => {
   const anim = useRef(new Animated.Value(-DRAWER_WIDTH)).current;
   const [shouldRender, setShouldRender] = useState(visible);
+  const [langOpen, setLangOpen] = useState(false);
 
   const { theme, toggleTheme } = useContext(ThemeContext);
+  const { language, setLanguage } = useContext(LanguageContext);
 
   useEffect(() => {
     if (visible) {
@@ -62,6 +66,7 @@ const Drawer = ({ visible, onClose, items }) => {
           },
         ]}
       >
+        {/* LOGO IMAGE */}
         <View style={{ height: 130, width: 130, position: "relative" }}>
           <Image
             source={require("../assets/images/hadith-logo.png")}
@@ -73,9 +78,11 @@ const Drawer = ({ visible, onClose, items }) => {
             }}
           />
         </View>
+
         <Text style={{ fontSize: hp(2.1), color: "gray" }}>by Mohd Fahad</Text>
 
         <View style={{ width: "100%" }}>
+          {/* THEME SWITCH */}
           <View
             style={{ flexDirection: "row", alignItems: "center", padding: 5 }}
           >
@@ -106,6 +113,7 @@ const Drawer = ({ visible, onClose, items }) => {
             </View>
           </View>
 
+          {/* DRAWER ITEMS */}
           <View
             style={{
               gap: 22,
@@ -131,6 +139,81 @@ const Drawer = ({ visible, onClose, items }) => {
                 </Text>
               </Pressable>
             ))}
+          </View>
+
+          {/* Language selector */}
+          <View style={{ gap: 13, marginTop: 22 }}>
+            <View style={styles.row} className="flex-row items-center">
+              <MaterialCommunityIcons
+                name="translate"
+                size={24}
+                color={theme === "dark" ? "#E3E3E3" : "#000"}
+              />
+              <Text
+                style={[
+                  styles.label,
+                  { color: theme === "dark" ? "#E3E3E3" : "#000" },
+                ]}
+              >
+                Language
+              </Text>
+            </View>
+
+            {/* the “select box” */}
+            <View>
+              <Pressable
+                onPress={() => setLangOpen((v) => !v)}
+                style={[
+                  styles.selectBox,
+                  { borderColor: theme === "dark" ? "#555" : "#ccc" },
+                ]}
+              >
+                <Text style={{ color: theme === "dark" ? "#E3E3E3" : "#000" }}>
+                  {language === "english" ? "English" : "Arabic"}
+                </Text>
+                <AntDesign
+                  name="down"
+                  size={22}
+                  color={theme === "dark" ? "#E3E3E3" : "#000"}
+                />
+              </Pressable>
+
+              {langOpen && (
+                <View
+                  style={[
+                    styles.options,
+                    { backgroundColor: theme === "dark" ? "#2A2A2A" : "#FFF" },
+                  ]}
+                >
+                  <Pressable
+                    onPress={() => {
+                      setLanguage("english");
+                      setLangOpen(false);
+                    }}
+                    style={styles.option}
+                  >
+                    <Text
+                      style={{ color: theme === "dark" ? "#E3E3E3" : "#000" }}
+                    >
+                      English
+                    </Text>
+                  </Pressable>
+                  <Pressable
+                    onPress={() => {
+                      setLanguage("arabic");
+                      setLangOpen(false);
+                    }}
+                    style={styles.option}
+                  >
+                    <Text
+                      style={{ color: theme === "dark" ? "#E3E3E3" : "#000" }}
+                    >
+                      Arabic
+                    </Text>
+                  </Pressable>
+                </View>
+              )}
+            </View>
           </View>
         </View>
       </Animated.View>
@@ -159,6 +242,30 @@ const styles = StyleSheet.create({
     zIndex: 1000,
     alignItems: "center",
     gap: 20,
+  },
+  options: {
+    position: "absolute",
+    width: "100%",
+    top: 40,
+    right: 20,
+    width: 120,
+    borderWidth: 1,
+    borderColor: "#888",
+    borderRadius: 6,
+    zIndex: 1001,
+  },
+  option: {
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+  },
+  label: { fontSize: hp(2.2), marginLeft: 8 },
+  selectBox: {
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderWidth: 1,
+    borderRadius: 6,
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
 });
 
