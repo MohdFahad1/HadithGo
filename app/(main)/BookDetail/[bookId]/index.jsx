@@ -1,14 +1,17 @@
 import { View, Text, FlatList, Pressable } from "react-native";
-import React from "react";
+import React, { useContext } from "react";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { books } from "../../../../data/books";
 import ScreenWrapper from "../../../../components/ScreenWrapper";
 import Header from "../../../../components/Header";
 import { heightPercentageToDP } from "react-native-responsive-screen";
+import { ThemeContext } from "../../../../context/ThemeContext";
 
 const BookDetail = () => {
   const { bookId } = useLocalSearchParams();
   const router = useRouter();
+
+  const { theme } = useContext(ThemeContext);
 
   const book = books.find((b) => b.id === bookId);
 
@@ -28,7 +31,7 @@ const BookDetail = () => {
       <View
         style={{
           marginTop: heightPercentageToDP(8),
-          backgroundColor: "#fff",
+          backgroundColor: theme === "dark" ? "#1C1C1E" : "#fff",
           borderTopLeftRadius: 20,
           borderTopRightRadius: 20,
           paddingTop: 1,
@@ -54,15 +57,28 @@ const BookDetail = () => {
                 });
               }}
             >
-              <View className="bg-[#00AB9A] items-center justify-center rounded-lg size-10">
+              <View
+                className={`
+        items-center justify-center rounded-lg size-10
+        ${theme === "dark" ? "bg-[#00AB9A]/40" : "bg-[#00AB9A]"}
+      `}
+              >
                 <Text
-                  className="text-white "
-                  style={{ alignItems: "center", justifyContent: "center" }}
+                  style={{
+                    alignItems: "center",
+                    justifyContent: "center",
+                    color: theme === "dark" ? "#F2EFEB" : "white",
+                  }}
                 >
                   {item.id}
                 </Text>
               </View>
-              <Text className="flex-1 text-[16px]">{item.english}</Text>
+              <Text
+                className="flex-1 text-[16px]"
+                style={{ color: theme === "dark" ? "#F2EFEB" : "#000" }}
+              >
+                {item.english}
+              </Text>
             </Pressable>
           )}
           ItemSeparatorComponent={() => <View className="h-[1px] bg-[#eee]" />}

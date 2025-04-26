@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { View, Text, FlatList, Pressable, Alert } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import { books } from "../../../../data/books";
@@ -10,11 +10,14 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import * as Clipboard from "expo-clipboard";
 import { Share } from "react-native";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import { ThemeContext } from "../../../../context/ThemeContext";
 
 export default function ChapterDetail() {
   const { bookId, chapterId } = useLocalSearchParams();
   const [copiedHadith, setCopiedHadith] = useState(null);
   const b = books.find((b) => b.id === bookId);
+
+  const { theme } = useContext(ThemeContext);
 
   if (!b) {
     return <Text>Book not found</Text>;
@@ -71,17 +74,29 @@ export default function ChapterDetail() {
       />
 
       <View
-        className="px-5 bg-[#fff] rounded-t-3xl flex-1"
-        style={{ marginTop: hp(8) }}
+        className="flex-1 px-5 rounded-t-3xl"
+        style={{
+          marginTop: hp(8),
+          backgroundColor: theme === "dark" ? "#1C1C1E" : "#fff",
+        }}
       >
         <FlatList
           data={hadithsForThisChapter}
           keyExtractor={(h, i) => (h.id ?? i).toString()}
           showsVerticalScrollIndicator={false}
           renderItem={({ item }) => (
-            <View className="p-3 border-[1px] rounded-xl border-[#ccc] mt-5">
+            <View
+              className="p-3 border-[1px] rounded-xl mt-5"
+              style={{ borderColor: theme === "dark" ? "#444" : "#ccc" }}
+            >
               <View style={{ flex: 1 }}>
-                <Text className="mb-3" style={{ fontSize: hp(2.2) }}>
+                <Text
+                  className="mb-3"
+                  style={{
+                    fontSize: hp(2.2),
+                    color: theme === "dark" ? "#e3e3e3" : "#666",
+                  }}
+                >
                   {item.english.text}
                 </Text>
               </View>

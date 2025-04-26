@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { View, Text, FlatList, TouchableOpacity } from "react-native";
 import { books } from "../data/books.js";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
@@ -6,6 +6,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import { useRouter } from "expo-router";
+import { ThemeContext } from "../context/ThemeContext.js";
 
 const colors = [
   "#FF6B6B",
@@ -26,6 +27,8 @@ export default function HadithBooks() {
   const [numColumns, setNumColumns] = useState(1);
   const router = useRouter();
 
+  const { theme } = useContext(ThemeContext);
+
   const renderGridItem = ({ item, index }) => {
     const initial = item.id.charAt(0).toUpperCase();
     const bgColor = colors[index % colors.length];
@@ -42,7 +45,10 @@ export default function HadithBooks() {
           alignItems: "center",
           paddingVertical: 20,
           margin: 8,
-          backgroundColor: "#fff",
+          backgroundColor: theme === "dark" ? "#1C1C1E" : "#fff",
+          borderWidth: 0.5,
+          borderColor:
+            theme === "dark" ? colors[index % colors.length] : "#FFF",
           borderRadius: 10,
         }}
       >
@@ -68,6 +74,7 @@ export default function HadithBooks() {
             fontSize: hp(2.2),
             fontWeight: "600",
             marginTop: 8,
+            color: theme === "dark" ? "#e3e3e3" : "#121212",
           }}
         >
           {item.name}
@@ -98,7 +105,7 @@ export default function HadithBooks() {
           alignItems: "center",
           gap: 10,
           margin: 8,
-          borderBottomColor: "#e3e3e3",
+          borderBottomColor: theme === "dark" ? "#D9D6D2" : "#e3e3e3",
           borderBottomWidth: 1,
         }}
       >
@@ -118,11 +125,17 @@ export default function HadithBooks() {
           </Text>
         </View>
         <View style={{ flex: 1 }}>
-          <Text style={{ fontSize: 16, fontWeight: "600" }}>
+          <Text
+            style={{
+              fontSize: 16,
+              fontWeight: "600",
+              color: theme === "dark" ? "#E3E3E3" : "#000",
+            }}
+          >
             {item.name}{" "}
             <Text
               style={{
-                color: "#666",
+                color: theme === "dark" ? "#F7F5F2" : "#121212",
                 fontSize: 12,
                 fontWeight: "400",
               }}
@@ -130,7 +143,14 @@ export default function HadithBooks() {
               ({item.data.hadiths.length} hadiths)
             </Text>
           </Text>
-          <Text style={{ color: "#666", marginTop: 4 }}>From: {author}</Text>
+          <Text
+            style={{
+              color: theme === "dark" ? "#CCCCCC" : "#666",
+              marginTop: 4,
+            }}
+          >
+            From: {author}
+          </Text>
         </View>
       </AnimatedTouchable>
     );
@@ -143,7 +163,12 @@ export default function HadithBooks() {
         paddingTop: 10,
         paddingBottom: 50,
         paddingHorizontal: 10,
-        backgroundColor: numColumns === 2 ? "#F5F5F8" : "#fff",
+        backgroundColor:
+          theme === "dark"
+            ? "#1C1C1E"
+            : numColumns === 2
+            ? "#F5F5F8"
+            : "#FFFFFF",
         borderRadius: 20,
       }}
     >

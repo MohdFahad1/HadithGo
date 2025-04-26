@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import {
   Animated,
   View,
@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import { ThemeContext } from "../context/ThemeContext";
 
 const { width: screenWidth } = Dimensions.get("window");
 const DRAWER_WIDTH = screenWidth * 0.7;
@@ -18,6 +19,8 @@ const DRAWER_WIDTH = screenWidth * 0.7;
 const Drawer = ({ visible, onClose, items }) => {
   const anim = useRef(new Animated.Value(-DRAWER_WIDTH)).current;
   const [shouldRender, setShouldRender] = useState(visible);
+
+  const { theme, toggleTheme } = useContext(ThemeContext);
 
   useEffect(() => {
     if (visible) {
@@ -47,7 +50,17 @@ const Drawer = ({ visible, onClose, items }) => {
       <Pressable onPress={onClose} style={styles.overlay} />
 
       <Animated.View
-        style={[styles.drawer, { transform: [{ translateX: anim }] }]}
+        style={[
+          styles.drawer,
+          {
+            transform: [
+              {
+                translateX: anim,
+              },
+            ],
+            backgroundColor: theme === "dark" ? "#1C1C1E" : "#FFF",
+          },
+        ]}
       >
         <View style={{ height: 130, width: 130, position: "relative" }}>
           <Image
@@ -69,15 +82,35 @@ const Drawer = ({ visible, onClose, items }) => {
             <MaterialCommunityIcons
               name="theme-light-dark"
               size={24}
-              color="black"
+              color={theme === "dark" ? "#E3E3E3" : "#000"}
             />
-            <Text style={{ fontSize: hp(2.2), marginLeft: 8 }}>Theme</Text>
+            <Text
+              style={{
+                fontSize: hp(2.2),
+                marginLeft: 8,
+                color: theme === "dark" ? "#E3E3E3" : "#000",
+              }}
+            >
+              Theme
+            </Text>
             <View style={{ flex: 1, alignItems: "flex-end" }}>
-              <Switch />
+              <Switch
+                value={theme === "dark"}
+                onValueChange={toggleTheme}
+                trackColor={{
+                  false: "#767577",
+                  true: "#81B0FF",
+                }}
+                thumbColor={theme === "dark" ? "#4A4A4A" : "#F5DD4B"}
+              />
             </View>
           </View>
 
-          <View className="gap-4">
+          <View
+            style={{
+              gap: 22,
+            }}
+          >
             {items.map((it, i) => (
               <Pressable
                 key={i}
@@ -88,7 +121,14 @@ const Drawer = ({ visible, onClose, items }) => {
                 className="flex-row items-center gap-2"
               >
                 {it.icon && <View style={styles.iconWrapper}>{it.icon}</View>}
-                <Text style={{ fontSize: hp(2.2) }}>{it.label}</Text>
+                <Text
+                  style={{
+                    fontSize: hp(2.2),
+                    color: theme === "dark" ? "#E3E3E3" : "#000",
+                  }}
+                >
+                  {it.label}
+                </Text>
               </Pressable>
             ))}
           </View>
@@ -114,7 +154,6 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     width: DRAWER_WIDTH,
-    backgroundColor: "#fff",
     paddingVertical: 40,
     paddingHorizontal: 20,
     zIndex: 1000,
