@@ -103,9 +103,9 @@ const Header = ({ heading, subHeading, backButton = false }) => {
             )}
           </View>
         </View>
-        <Pressable>
+        {/* <Pressable>
           <MaterialIcons name="favorite-border" size={28} color="white" />
-        </Pressable>
+        </Pressable> */}
       </View>
       {
         <Drawer
